@@ -1,12 +1,18 @@
 import { motion } from 'framer-motion';
 import { Calculator, TrendingUp, Shield, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { analytics } from '@/lib/analytics';
 
 interface WelcomeHeroProps {
   onGetStarted: () => void;
 }
 
 export function WelcomeHero({ onGetStarted }: WelcomeHeroProps) {
+  const handleGetStarted = () => {
+    analytics.getStartedClick();
+    onGetStarted();
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
       <motion.div
@@ -57,7 +63,7 @@ export function WelcomeHero({ onGetStarted }: WelcomeHeroProps) {
         >
           <Button
             size="lg"
-            onClick={onGetStarted}
+            onClick={handleGetStarted}
             className="group relative overflow-hidden bg-accent hover:bg-gold-light text-accent-foreground px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 gold-glow"
           >
             <span className="relative z-10 flex items-center gap-2">

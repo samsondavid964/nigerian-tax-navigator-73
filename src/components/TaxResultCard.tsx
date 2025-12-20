@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, TrendingUp, Percent, Calendar, Wallet, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TaxBreakdown, TaxInput, formatCurrency, generateTaxExplanation } from '@/lib/taxCalculator';
+import { analytics } from '@/lib/analytics';
 
 interface TaxResultCardProps {
   input: TaxInput;
@@ -12,6 +14,15 @@ interface TaxResultCardProps {
 
 export function TaxResultCard({ input, breakdown, onBack, onRecalculate }: TaxResultCardProps) {
   const explanation = generateTaxExplanation(input, breakdown);
+
+  useEffect(() => {
+    analytics.resultView(breakdown.effectiveTaxRate, breakdown.totalAnnualTax);
+  }, [breakdown.effectiveTaxRate, breakdown.totalAnnualTax]);
+
+  const handleRecalculate = () => {
+    analytics.calculateAgain();
+    onRecalculate();
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
@@ -183,7 +194,7 @@ export function TaxResultCard({ input, breakdown, onBack, onRecalculate }: TaxRe
               transition={{ delay: 1.1 }}
             >
               <Button
-                onClick={onRecalculate}
+                onClick={handleRecalculate}
                 className="w-full h-14 text-lg font-semibold bg-primary hover:bg-forest-light text-primary-foreground rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Calculate Again
