@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { TaxInput } from '@/lib/taxCalculator';
+import { analytics } from '@/lib/analytics';
 
 interface TaxCalculatorFormProps {
   onBack: () => void;
@@ -41,6 +42,11 @@ export function TaxCalculatorForm({ onBack, onCalculate }: TaxCalculatorFormProp
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    analytics.formSubmit(
+      isMonthly ? 'monthly' : 'annual',
+      isSalaryEarner ? 'salary_earner' : 'freelancer'
+    );
     
     onCalculate({
       grossIncome: parseInputValue(grossIncome),
